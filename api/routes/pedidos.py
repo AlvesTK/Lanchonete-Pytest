@@ -3,8 +3,11 @@ from schemas.pedido import PedidoCreate, PedidoAddItem, PedidoOut
 from services.lanchonete_service import service
 
 router = APIRouter(prefix="/lanchonete/pedidos", tags=["pedidos"])
+
+
 @router.post("", response_model=PedidoOut)
 def criar(payload: PedidoCreate):
+    """Cria um pedido com o primeiro produto já adicionado."""
     pedido = service.criar_pedido(payload.cpf, payload.cod_produto, payload.qtd_max_produtos)
     if not pedido:
         raise HTTPException(
@@ -19,8 +22,10 @@ def criar(payload: PedidoCreate):
         produtos=[p.codigo for p in pedido.listaProdutos],
     )
 
+
 @router.put("/{cod_pedido}/itens")
 def adicionar_item(cod_pedido: int, payload: PedidoAddItem):
+    """Adiciona um produto a um pedido existente."""
     ok = service.alterar_pedido(cod_pedido, payload.cod_produto)
     if not ok:
         raise HTTPException(
@@ -29,15 +34,19 @@ def adicionar_item(cod_pedido: int, payload: PedidoAddItem):
         )
     return {"ok": True}
 
+
 @router.post("/{cod_pedido}/finalizar")
 def finalizar(cod_pedido: int):
+    """Finaliza um pedido e retorna o total calculado."""
     total = service.finalizar_pedido(cod_pedido)
     if total is None:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
     return {"total": total}
 
+
 @router.get("/{cod_pedido}", response_model=PedidoOut)
 def obter(cod_pedido: int):
+    """Busca um pedido pelo código."""
     pedido = service.obter_pedido(cod_pedido)
     if not pedido:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")

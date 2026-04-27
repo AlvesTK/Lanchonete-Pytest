@@ -7,6 +7,7 @@ router = APIRouter(prefix="/produtos", tags=["produtos"])
 
 @router.post("", response_model=ProdutoOut)
 def criar(payload: ProdutoCreate):
+    """Cria um novo produto."""
     produto = service.criar_produto(
         payload.codigo,
         payload.valor,
@@ -18,6 +19,7 @@ def criar(payload: ProdutoCreate):
 
 @router.get("/{codigo}", response_model=ProdutoOut)
 def obter(codigo: int):
+    """Busca um produto pelo código."""
     produto = service.obter_produto(codigo)
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -26,6 +28,7 @@ def obter(codigo: int):
 
 @router.put("/{codigo}/valor")
 def alterar_valor(codigo: int, payload: ProdutoAlterarValor):
+    """Atualiza o valor de um produto existente."""
     alterou = service.alterar_valor_produto(codigo, payload.novo_valor)
     if not alterou:
         raise HTTPException(status_code=404, detail="Produto não encontrado")

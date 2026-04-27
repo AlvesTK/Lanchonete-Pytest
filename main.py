@@ -10,14 +10,15 @@ from fastapi import Request
 
 
 app = FastAPI(
-                title="Projeto Lanchonete", 
-                description="API para gerenciamento de clientes e produtos da lanchonete", 
+                title="Projeto Lanchonete",
+                description="API para gerenciamento de clientes e produtos da lanchonete",
                 version="1.0.0"
             )
 
-# Tratamento global de erros do tipo ValueError, retornando status 400 com a mensagem de erro
+
 @app.exception_handler(ValueError)
 async def value_error_exception_handler(request: Request, exc: ValueError):
+    """Tratamento global de erros do tipo ValueError, retornando status 400."""
     return JSONResponse(
         status_code=400,
         content={"detail": str(exc)},
