@@ -42,3 +42,9 @@ def test_get_cliente_inexistente(client):
     """
     response = client.get("/clientes/000")
     assert response.status_code == 404
+
+def test_cliente_cpf_vazio(client):
+    response = client.post("/clientes", json={"cpf": "", "nome": "Cliente Z"})
+    with pytest.raises(HTTPException) as info:
+        test_get_cliente_inexistente(client)
+    assert info.value.status_code == 400

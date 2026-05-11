@@ -80,3 +80,8 @@ def test_pedido_finalizar_calcula_total_com_regras():
     total = pedido.finalizar()
     assert total == 29.0
     assert pedido.esta_entregue is True
+
+def test_pedido_qtd_zero():
+    pedido = Pedido(cliente=c, qtd_max_produtos=10)
+    with pytest.raises(ValueError):
+        pedido.qtd_max_produtos=(0)
